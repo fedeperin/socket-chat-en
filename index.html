@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chat</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="./app.js" defer></script>
+</head>
+
+<body>
+    <form id="name">
+        <input type="text" autocomplete="off" placeholder="Name...">
+        <button type="submit">Change name</button>
+    </form>
+
+    <div id="messages"></div>
+
+    <form id="form" action="">
+        <input id="input" autocomplete="off" autofocus placeholder="Message..."/>
+        <button>Send</button>
+    </form>
+</body>
+
+</html>
