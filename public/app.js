@@ -37,7 +37,7 @@ function addUrls(text) {
 
 form.addEventListener('submit', e => {
     e.preventDefault()
-    if (input.value) {
+    if (input.value.trim()) {
         socket.emit('chat message', input.value, userName)
 
 
@@ -58,6 +58,8 @@ form.addEventListener('submit', e => {
 
         window.scrollTo(0, document.body.scrollHeight)
 
+        input.value = ''
+    }else {
         input.value = ''
     }
 })
