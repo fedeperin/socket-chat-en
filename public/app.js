@@ -4,6 +4,7 @@ let messages = document.querySelector('#messages')
 let form = document.querySelector('#form')
 let nameForm = document.querySelector('form#name')
 let input = document.getElementById('input')
+let newMessageSound = document.querySelector('#newMessageSound')
 let userName = 'Anonymus'
 
 function generateRandom(min, max) {
@@ -54,6 +55,10 @@ form.addEventListener('submit', e => {
     }
 })
 
+document.addEventListener('mousemove', () => {
+
+})
+
 socket.on('chat message', (msg, name) => {
     var cont = document.createElement('div')
     var message = document.createElement('div')
@@ -71,9 +76,12 @@ socket.on('chat message', (msg, name) => {
     cont.appendChild(message)
     messages.appendChild(cont)
 
+    newMessageSound.currentTime = ''
+    newMessageSound.play()
+
     window.scrollTo(0, document.body.scrollHeight)
 })
-socket.on('someone disconnected', function () {
+socket.on('someone disconnected', () => {
     var disconnected = document.createElement('div')
 
     disconnected.classList.add('disconnected')
@@ -82,9 +90,12 @@ socket.on('someone disconnected', function () {
 
     messages.appendChild(disconnected)
 
+    newMessageSound.currentTime = ''
+    newMessageSound.play()
+
     window.scrollTo(0, document.body.scrollHeight)
 })
-socket.on('someone connected', function () {
+socket.on('someone connected', () => {
     var connected = document.createElement('div')
 
     connected.classList.add('connected')
@@ -92,6 +103,9 @@ socket.on('someone connected', function () {
     connected.textContent = 'Someone connected'
 
     messages.appendChild(connected)
+
+    newMessageSound.currentTime = ''
+    newMessageSound.play()
 
     window.scrollTo(0, document.body.scrollHeight)
 })
