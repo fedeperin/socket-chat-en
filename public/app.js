@@ -28,6 +28,13 @@ nameForm.addEventListener('submit', e => {
     }
 })
 
+function addUrls(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank">${url}</a>`
+    })
+}
+
 form.addEventListener('submit', e => {
     e.preventDefault()
     if (input.value) {
@@ -42,7 +49,7 @@ form.addEventListener('submit', e => {
         cont.classList.add('cont-msg')
         message.classList.add('msg')
 
-        message.textContent = input.value
+        message.innerHTML = addUrls(input.value)
         nameDiv.textContent = 'Me'
 
         cont.appendChild(nameDiv)
@@ -69,7 +76,7 @@ socket.on('chat message', (msg, name) => {
     cont.classList.add('cont-msg-other')
     message.classList.add('msg')
 
-    message.textContent = msg
+    message.innerHTML = addUrls(msg)
     nameDiv.textContent = name
 
     cont.appendChild(nameDiv)

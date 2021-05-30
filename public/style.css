@@ -85,7 +85,30 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 15px;
+    display: flex;
     transition: all 1s ease;
+}
+
+.msg * {
+    font-size: 15px;
+    font-weight: normal;
+    background: rgba(0, 0, 0, 0);
+    border: none;
+    outline: none;
+    text-decoration: none;
+    cursor: text;
+}
+
+.msg a {
+    cursor: pointer;
+    color: #0a3bdb;
+    text-decoration: underline;
+    transition: all .5s ease;
+}
+
+.msg a:hover {
+    opacity: 0.8;
 }
 
 .cont-msg .name {
