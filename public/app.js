@@ -5,10 +5,60 @@ let form = document.querySelector('#form')
 let nameForm = document.querySelector('form#name')
 let input = document.getElementById('input')
 let newMessageSound = document.querySelector('#newMessageSound')
+let gifsBtn = document.getElementById('gifs')
+let gifsPlace = document.getElementById('gifs-place')
+let gifsContainer = document.querySelector('#gifs-container')
+let gifsPlaceClose = document.querySelector('#gifs-place .close')
+let gifsForm = document.querySelector('#gifs-place form')
 let userName = 'Anonymus'
 
 function generateRandom(min, max) {
     return Math.floor(Math.random() * (max - min) + min)
+}
+
+function addUrls(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank">${url}</a>`
+    })
+}
+
+function fetchGifs(urlToFetch) {
+    gifsContainer.innerHTML = ''
+    fetch(urlToFetch)
+        .then((res) => res.json())
+        .then((data) => {
+            data.results.forEach(result => {
+                var newGifCont = document.createElement('div')
+                var newGif = document.createElement('img')
+                newGif.setAttribute('src', result.media[0].gif.url)
+
+                newGifCont.appendChild(newGif)
+                gifsContainer.appendChild(newGifCont)
+
+                newGif.addEventListener('click', () => {
+                    socket.emit('chat message', `<img src="${ result.media[0].gif.url }" draggable="false">`, userName)
+                    gifsPlace.style.display = 'none'
+                    var cont = document.createElement('div');
+                    var message = document.createElement('div')
+                    var nameDiv = document.createElement('div')
+
+                    nameDiv.classList.add('name')
+                    cont.classList.add('cont-msg')
+                    message.classList.add('msg')
+
+                    message.innerHTML = `<img src="${ result.media[0].gif.url }" draggable="false">`
+                    nameDiv.textContent = 'Me'
+
+                    cont.appendChild(nameDiv)
+                    cont.appendChild(message)
+                    messages.appendChild(cont)
+
+                    window.scrollTo(0, document.body.scrollHeight)
+                })
+            })
+        })
+        .catch((e) => console.log(e));
 }
 
 for (var i = 0; i <= 4; i++) {
@@ -28,17 +78,15 @@ nameForm.addEventListener('submit', e => {
     }
 })
 
-function addUrls(text) {
-    var urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, (url) => {
-        return `<a href="${url}" target="_blank">${url}</a>`
-    })
-}
+gifsForm.addEventListener('submit', e => {
+    e.preventDefault()
+    fetchGifs(`https://g.tenor.com/v1/search?q=${ gifsForm.querySelector('input').value }&key=LIVDSRZULELA&limit=8`)
+})
 
 form.addEventListener('submit', e => {
     e.preventDefault()
     if (input.value.trim()) {
-        socket.emit('chat message', input.value, userName)
+        socket.emit('chat message', addUrls(input.value), userName)
 
 
         var cont = document.createElement('div');
@@ -59,7 +107,7 @@ form.addEventListener('submit', e => {
         window.scrollTo(0, document.body.scrollHeight)
 
         input.value = ''
-    }else {
+    } else {
         input.value = ''
     }
 })
@@ -78,7 +126,7 @@ socket.on('chat message', (msg, name) => {
     cont.classList.add('cont-msg-other')
     message.classList.add('msg')
 
-    message.innerHTML = addUrls(msg)
+    message.innerHTML = msg
     nameDiv.textContent = name
 
     cont.appendChild(nameDiv)
@@ -118,3 +166,12 @@ socket.on('someone connected', () => {
 
     window.scrollTo(0, document.body.scrollHeight)
 })
+
+gifsBtn.addEventListener('click', () => {
+    gifsPlace.style.display = 'flex'
+})
+gifsPlaceClose.addEventListener('click', () => {
+    gifsPlace.style.display = 'none'
+})
+
+fetchGifs("https://g.tenor.com/v1/trending?key=LIVDSRZULELA")
