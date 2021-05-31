@@ -10,6 +10,7 @@ let gifsPlace = document.getElementById('gifs-place')
 let gifsContainer = document.querySelector('#gifs-container')
 let gifsPlaceClose = document.querySelector('#gifs-place .close')
 let gifsForm = document.querySelector('#gifs-place form')
+let peopleConnected = document.querySelector('.peopleConnected span')
 let userName = 'Anonymus'
 
 function generateRandom(min, max) {
@@ -21,6 +22,15 @@ function addUrls(text) {
     return text.replace(urlRegex, (url) => {
         return `<a href="${url}" target="_blank">${url}</a>`
     })
+}
+
+function checkPeopleConnected() {
+    fetch("./connections.json")
+        .then((res) => res.json())
+        .then((data) => {
+            peopleConnected.textContent = data.connected
+        })
+        .catch((e) => console.log(e));
 }
 
 function fetchGifs(urlToFetch) {
@@ -140,31 +150,36 @@ socket.on('chat message', (msg, name) => {
 })
 socket.on('someone disconnected', () => {
     var disconnected = document.createElement('div')
-
+    
     disconnected.classList.add('disconnected')
-
+    
     disconnected.textContent = 'Someone disconnected'
 
     messages.appendChild(disconnected)
 
     newMessageSound.currentTime = ''
     newMessageSound.play()
-
+    
     window.scrollTo(0, document.body.scrollHeight)
+    checkPeopleConnected()
 })
 socket.on('someone connected', () => {
     var connected = document.createElement('div')
-
+    
     connected.classList.add('connected')
-
+    
     connected.textContent = 'Someone connected'
-
+    
     messages.appendChild(connected)
-
+    
     newMessageSound.currentTime = ''
     newMessageSound.play()
-
+    
     window.scrollTo(0, document.body.scrollHeight)
+    checkPeopleConnected()
+})
+socket.on('no broadcast connected', () => {
+    checkPeopleConnected()
 })
 
 gifsBtn.addEventListener('click', () => {
@@ -175,3 +190,4 @@ gifsPlaceClose.addEventListener('click', () => {
 })
 
 fetchGifs("https://g.tenor.com/v1/trending?key=LIVDSRZULELA")
+checkPeopleConnected()

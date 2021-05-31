@@ -5,4 +5,4 @@ It's a nodejs chat with socket.io and express
 https://socket-chat-en.herokuapp.com/
 
 ### Installation
-To install it run  ` npm i socket.io express ` to install the dependencies and then ` node server.js ` to run it at http://localhost:3000
+To install it run  ` npm i socket.io express fs-extra ` to install the dependencies and then ` node server.js ` to run it at http://localhost:3000
